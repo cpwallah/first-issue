@@ -1,0 +1,331 @@
+/*
+    Problem Link: https://leetcode.com/problems/valid-parentheses/
+*/
+
+class Solution {
+public:
+    bool isValid(string str) {
+        stack<char> s;
+        // for every opening bracket push the corresponding closing bracket
+        for(const char &ch : str) {
+            switch(ch) {
+                case '(':
+                    s.push(')');
+                    break;
+                case '{':
+                    s.push('}');
+                    break;
+                case '[':
+                    s.push(']');
+                    break;
+                default:
+                    // closing bracket is encountered
+                    // no opening bracket exists
+                    if(s.empty())
+                        return false;
+                    // matching bracket is found: pop it and continue
+                    else if(ch == s.top()) 
+                        s.pop();
+                    else
+                        return false;
+                    break;       
+            }
+        }
+        // some extra brackets could have been left out
+        // for valid parenthesis, stack must be empty
+        return s.empty();
+    }
+};
+
+/*
+    Problem Link: https://leetcode.com/problems/next-greater-element-i/
+*/
+
+class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+        unordered_map<int, int> m; // {element : next greater element}
+        stack<int> s; // store indices
+        int n = (int)nums2.size();
+        // traverse from right to left
+        for(int i = n - 1; i >= 0; i--) {
+            // pop stack elements if current element is greater than top of stack
+            while(!s.empty() && nums2[i] >= nums2[s.top()])
+                s.pop();
+            
+            m[nums2[i]] = s.empty() ? -1 : nums2[s.top()];
+            // push the current element on the stack
+            s.push(i);
+        }
+        vector<int> results;
+        for(int &x : nums1)
+            results.push_back(m[x]);
+        return results;
+    }
+};
+
+/*
+    Problem Link: https://leetcode.com/problems/next-greater-element-ii/
+*/
+
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> result(n); // to store the result
+        stack<int> s; // to store the indices of the next greater number.
+        // we are not storing numbers because of duplicates
+        
+        for(int i = 2 * n - 1; i >= 0; i--) {
+            while(!s.empty() and arr[s.top()] <= arr[i % n]) {
+                s.pop();
+            }
+            result[i % n] = (s.empty() ? -1 : arr[s.top()]);
+            // push the current index on the stack
+            s.push(i % n);
+        }
+        return result;
+    }
+};
+
+/*
+    Problem Link: https://practice.geeksforgeeks.org/problems/implement-queue-using-array/1/
+*/
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct QueueNode
+{
+    int data;
+    QueueNode *next;
+};
+
+class MyQueue {
+private:
+    int arr[100005];
+    int front;
+    int rear;
+
+public :
+    MyQueue(){front=0;rear=0;}
+    void push(int);
+    int pop();
+};
+
+int main()
+{
+    int T;
+    cin>>T;
+    while(T--)
+    {
+        MyQueue *sq = new MyQueue();
+
+        int Q;
+        cin>>Q;
+        while(Q--){
+        int QueryType=0;
+        cin>>QueryType;
+        if(QueryType==1)
+        {
+            int a;
+            cin>>a;
+            sq->push(a);
+        }else if(QueryType==2){
+            cout<<sq->pop()<<" ";
+
+        }
+        }
+        cout<<endl;
+    }
+}
+
+//Function to push an element x in a queue.
+void MyQueue :: push(int x) {
+    // Your Code
+    // avoid overflow
+    if(rear >= 100005)
+        return;
+    arr[rear++] = x;    
+}
+
+//Function to pop an element from queue and return that element.
+int MyQueue :: pop() {
+    // Your Code 
+    return front == rear ? -1 : arr[front++];
+}
+
+/*
+    Problem Link: https://leetcode.com/problems/implement-queue-using-stacks/
+*/
+
+class MyQueue {
+public:
+    // IMPLEMENTATION USING TWO STACKS: all operations would be performed on the output stack
+    /*
+        Amortized O(1) push and pop operations
+    */
+    /** Initialize your data structure here. */
+    stack<int> input, output;
+    MyQueue() {
+            
+    }
+    
+    /** Push element x to the back of queue. */
+    void push(int x) {
+        input.push(x);
+    }
+    
+    /** Removes the element from in front of queue and returns that element. */
+    int pop() {
+        int e; // top element that needs to be returned
+        // move elements from input to output
+        if(output.empty()) {
+            while(!input.empty()) {
+                output.push(input.top());
+                input.pop();
+            }
+        }
+        e = output.top();
+        output.pop();
+        return e;
+    }
+    
+    /** Get the front element. */
+    int peek() {
+        // move elements from input to output
+        if(output.empty()) {
+            while(!input.empty()) {
+                output.push(input.top());
+                input.pop();
+            }
+        }
+        return output.top();
+    }
+    
+    /** Returns whether the queue is empty. */
+    bool empty() {
+        return input.empty() && output.empty();
+    }
+};
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue* obj = new MyQueue();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->peek();
+ * bool param_4 = obj->empty();
+ */
+/*
+    Problem Link: https://practice.geeksforgeeks.org/problems/implement-stack-using-array/1
+*/
+
+#include<bits/stdc++.h>
+using namespace std;
+
+class MyStack
+{
+private:
+    int arr[1000];
+    int top;
+public:
+    MyStack(){top=-1;}
+    int pop();
+    void push(int);
+};
+
+
+int main()
+{
+
+    int T;
+    cin>>T;
+    while(T--)
+    {
+        MyStack *sq = new MyStack();
+
+        int Q;
+        cin>>Q;
+        while(Q--){
+        int QueryType=0;
+        cin>>QueryType;
+        if(QueryType==1)
+        {
+            int a;
+            cin>>a;
+            sq->push(a);
+        }else if(QueryType==2){
+            cout<<sq->pop()<<" ";
+
+        }
+        }
+        cout<<endl;
+    }
+}
+
+//Function to push an integer into the stack.
+void MyStack :: push(int x) {
+    // Your Code
+    // avoid overflow
+    if(top >= 1000)
+        return;
+    arr[++top] = x;
+}
+
+//Function to remove an item from top of the stack.
+int MyStack :: pop() {
+    // Your Code  
+    return top == -1 ? -1 : arr[top--];
+}
+
+/*
+    Problem Link: https://leetcode.com/problems/implement-stack-using-queues/solution/
+*/
+
+class MyStack {
+public:
+    // IMPLEMENTATION USINIG A SINGLE QUEUE
+    /** Initialize your data structure here. */
+    queue<int> q;
+    MyStack() {
+    }
+    
+    /** Push element x onto stack. */
+    void push(int x) {
+        q.push(x);
+        // pop size - 1 elements and push them at the back
+        // this ensures the current element added t the end of the queue comes to the front
+        int size = q.size();
+        for(int i = 0; i < size - 1; i++) {
+            q.push(q.front());
+            q.pop();
+        }
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    int pop() {
+        int front = q.front();
+        q.pop();
+        return front;
+    }
+    
+    /** Get the top element. */
+    int top() {
+        return q.front();
+    }
+    
+    /** Returns whether the stack is empty. */
+    bool empty() {
+        return q.empty();
+    }
+};
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack* obj = new MyStack();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->top();
+ * bool param_4 = obj->empty();
+ */
